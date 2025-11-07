@@ -8,60 +8,89 @@ class _GalleryItem {
   final String assetPath;
   final int crossAxisCellCount;
   final int mainAxisCellCount;
+  final double height;
 
   const _GalleryItem({
     required this.assetPath,
     required this.crossAxisCellCount,
     required this.mainAxisCellCount,
+    required this.height,
   });
 }
 
 final List<_GalleryItem> _galleryItems = const [
   // Using local assets (lib/asset/Image11.png ... Image33.png). Sizes chosen to create a collage.
+  // _GalleryItem(
+  //   assetPath: 'lib/asset/Image11.png',
+  //   crossAxisCellCount: 1,
+  //   mainAxisCellCount: 2,
+  //   height: 130,
+  // ),
+  // _GalleryItem(
+  //   assetPath: 'lib/asset/Image12.png',
+  //   crossAxisCellCount: 1,
+  //   mainAxisCellCount: 2,
+  //   height: 140,
+  // ),
+  // _GalleryItem(
+  //   assetPath: 'lib/asset/Image13.png',
+  //   crossAxisCellCount: 1,
+  //   mainAxisCellCount: 2,
+  //   height: 175,
+  // ),
+  // _GalleryItem(
+  //   assetPath: 'lib/asset/Image21.png',
+  //   crossAxisCellCount: 1,
+  //   mainAxisCellCount: 1,
+  //   height: 175,
+  // ),
+  // _GalleryItem(
+  //   assetPath: 'lib/asset/Image22.png',
+  //   crossAxisCellCount: 1,
+  //   mainAxisCellCount: 1,
+  //   height: 130,
+  // ),
+  // _GalleryItem(
+  //   assetPath: 'lib/asset/Image23.png',
+  //   crossAxisCellCount: 1,
+  //   mainAxisCellCount: 1,
+  //   height: 140,
+  // ),
+  // _GalleryItem(
+  //   assetPath: 'lib/asset/Image31.png',
+  //   crossAxisCellCount: 1,
+  //   mainAxisCellCount: 2,
+  //   height: 175,
+  // ),
+  // _GalleryItem(
+  //   assetPath: 'lib/asset/Image32.png',
+  //   crossAxisCellCount: 2,
+  //   mainAxisCellCount: 1,
+  //   height: 140,
+  // ),
+  // _GalleryItem(
+  //   assetPath: 'lib/asset/Image33.png',
+  //   crossAxisCellCount: 1,
+  //   mainAxisCellCount: 1,
+  //   height: 175,
+  // ),
   _GalleryItem(
-    assetPath: 'lib/asset/Image11.png',
+    assetPath: 'lib/asset/1olumn.png',
     crossAxisCellCount: 1,
     mainAxisCellCount: 2,
+    height: 463,
   ),
   _GalleryItem(
-    assetPath: 'lib/asset/Image12.png',
+    assetPath: 'lib/asset/2olumn.png',
     crossAxisCellCount: 1,
     mainAxisCellCount: 2,
+    height: 463,
   ),
   _GalleryItem(
-    assetPath: 'lib/asset/Image13.png',
+    assetPath: 'lib/asset/3olumn.png',
     crossAxisCellCount: 1,
     mainAxisCellCount: 2,
-  ),
-  _GalleryItem(
-    assetPath: 'lib/asset/Image21.png',
-    crossAxisCellCount: 1,
-    mainAxisCellCount: 1,
-  ),
-  _GalleryItem(
-    assetPath: 'lib/asset/Image22.png',
-    crossAxisCellCount: 1,
-    mainAxisCellCount: 1,
-  ),
-  _GalleryItem(
-    assetPath: 'lib/asset/Image23.png',
-    crossAxisCellCount: 1,
-    mainAxisCellCount: 1,
-  ),
-  _GalleryItem(
-    assetPath: 'lib/asset/Image31.png',
-    crossAxisCellCount: 1,
-    mainAxisCellCount: 2,
-  ),
-  _GalleryItem(
-    assetPath: 'lib/asset/Image32.png',
-    crossAxisCellCount: 2,
-    mainAxisCellCount: 1,
-  ),
-  _GalleryItem(
-    assetPath: 'lib/asset/Image33.png',
-    crossAxisCellCount: 1,
-    mainAxisCellCount: 1,
+    height: 508,
   ),
 ];
 
@@ -74,6 +103,7 @@ class _GalleryTile extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(AppTheme.borderRadiusMedium),
       child: Container(
+        height: item.height,
         color: AppTheme.surfaceColor,
         child: Image.asset(
           item.assetPath,
@@ -95,32 +125,23 @@ class WelcomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(height: 24),
-
-              // Top collage container (staggered gallery inside a rounded card)
-              Stack(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // Fixed height background image section
+            Container(
+              height: 500, // Fixed height for background image section
+              width: double.infinity,
+              child: Stack(
                 children: [
                   Container(
                     height: 508,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(
-                        AppTheme.borderRadiusLarge,
-                      ),
-                      border: Border.all(
-                        color: AppTheme.primaryColor.withOpacity(0.12),
-                        width: 3,
-                      ),
-                      boxShadow: [AppTheme.cardShadow],
-                    ),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(
-                        AppTheme.borderRadiusLarge,
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(AppTheme.borderRadiusLarge),
+                        bottomRight: Radius.circular(
+                          AppTheme.borderRadiusLarge,
+                        ),
                       ),
                       child: Stack(
                         children: [
@@ -131,7 +152,7 @@ class WelcomeScreen extends StatelessWidget {
                               builder: (context, constraints) {
                                 final double availableWidth =
                                     constraints.maxWidth;
-                                final double spacing = 12.0;
+                                final double spacing = 10.0;
                                 final double tileWidth =
                                     (availableWidth - 2 * spacing) / 3;
 
@@ -139,6 +160,8 @@ class WelcomeScreen extends StatelessWidget {
                                   crossAxisCount: 3,
                                   crossAxisSpacing: spacing,
                                   mainAxisSpacing: spacing,
+                                  childAspectRatio:
+                                      tileWidth / constraints.maxHeight,
                                   physics: const NeverScrollableScrollPhysics(),
                                   shrinkWrap: true,
                                   children: _galleryItems.map((item) {
@@ -160,82 +183,76 @@ class WelcomeScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-
-                  // 标题部分 - 重叠在Stack上
-                  Positioned(
-                    left: 0,
-                    right: 0,
-                    top: -100, // 调整文字位置到Stack下方
-                    child: Column(
-                      children: [
-                        const Text(
-                          'New Place, New Home!',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: AppTheme.textPrimary,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 12),
-                        Text(
-                          'Are you ready to uproot and start over in a new area? Placoo will help you on your journey!',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: AppTheme.textSecondary,
-                            height: 1.5,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                  ),
                 ],
               ),
-              const SizedBox(height: 20),
-
-              const Spacer(),
-
-              // 按钮部分
-              CustomButton(
-                text: 'Log in',
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const LoginScreen(),
+            ),
+            Positioned(
+              left: 0,
+              right: 0,
+              top: 300,
+              child:
+                  // Fixed height text and buttons section
+                  Container(
+                    height:
+                        MediaQuery.of(context).size.height -
+                        500, // Remaining height
+                    width: double.infinity,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            'New Place, New Home!',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: AppTheme.textPrimary,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            'Are you ready to uproot and start over in a new area? Placoo will help you on your journey!',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: AppTheme.textSecondary,
+                              height: 1.5,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(height: 20),
+                          // Buttons section
+                          CustomButton(
+                            text: 'Log in',
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const LoginScreen(),
+                                ),
+                              );
+                            },
+                            isPrimary: true,
+                            borderRadius: 28.0,
+                            height: 56.0,
+                          ),
+                          const SizedBox(height: 12),
+                          CustomButton(
+                            text: 'Sign up',
+                            onPressed: () {
+                              // 注册逻辑
+                            },
+                            isPrimary: false,
+                            borderRadius: 28.0,
+                            height: 56.0,
+                          ),
+                        ],
+                      ),
                     ),
-                  );
-                },
-                isPrimary: true,
-                borderRadius: 28.0,
-                height: 56.0,
-              ),
-              const SizedBox(height: 12),
-              CustomButton(
-                text: 'Sign up',
-                onPressed: () {
-                  // 注册逻辑
-                },
-                isPrimary: false,
-                borderRadius: 28.0,
-                height: 56.0,
-              ),
-              const SizedBox(height: 18),
-
-              // small bottom indicator (like the design)
-              Center(
-                child: Container(
-                  width: 72,
-                  height: 6,
-                  decoration: BoxDecoration(
-                    color: AppTheme.borderColor,
-                    borderRadius: BorderRadius.circular(6),
                   ),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
