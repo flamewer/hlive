@@ -24,14 +24,17 @@ class _LoginScreenState extends State<LoginScreen> {
   InputDecoration _buildInputDecoration(String hintText) {
     return InputDecoration(
       hintText: hintText,
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(50.0)),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(50.0),
+        borderSide: BorderSide(color: Colors.blue, width: 1.0),
+      ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(50.0),
-        borderSide: BorderSide(color: AppTheme.borderColor),
+        borderSide: BorderSide(color: Colors.blue, width: 1.0),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(50.0),
-        borderSide: BorderSide(color: AppTheme.primaryColor),
+        borderSide: BorderSide(color: Colors.blue, width: 2.0),
       ),
     );
   }
@@ -48,7 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
         title: const Text('Login'),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -123,7 +126,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
             // 登录按钮
             CustomButton(
-              text: 'Login',
+              text: 'Log in',
               onPressed: () {
                 if (_emailController.text.isNotEmpty &&
                     _passwordController.text.isNotEmpty) {
@@ -136,6 +139,7 @@ class _LoginScreenState extends State<LoginScreen> {
               },
               isPrimary: true,
               borderRadius: 50.0,
+              height: 56.0,
             ),
             const SizedBox(height: 16),
 
@@ -180,6 +184,8 @@ class _LoginScreenState extends State<LoginScreen> {
               onPressed: () {
                 // Apple登录逻辑
               },
+              backgroundColor: Colors.black,
+              textColor: Colors.white,
             ),
             const SizedBox(height: 12),
             _buildSocialButton(
@@ -188,6 +194,8 @@ class _LoginScreenState extends State<LoginScreen> {
               onPressed: () {
                 // Google登录逻辑
               },
+              backgroundColor: Colors.white,
+              textColor: Colors.grey,
             ),
           ],
         ),
@@ -199,6 +207,8 @@ class _LoginScreenState extends State<LoginScreen> {
     String text,
     IconData icon, {
     VoidCallback? onPressed,
+    Color? backgroundColor,
+    Color? textColor,
   }) {
     return OutlinedButton(
       onPressed: onPressed,
@@ -208,16 +218,17 @@ class _LoginScreenState extends State<LoginScreen> {
           borderRadius: BorderRadius.circular(50.0),
           side: const BorderSide(color: AppTheme.borderColor),
         ),
+        backgroundColor: backgroundColor,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, color: AppTheme.textPrimary, size: 20),
+          Icon(icon, color: textColor ?? AppTheme.textPrimary, size: 20),
           const SizedBox(width: 8),
           Text(
             text,
-            style: const TextStyle(
-              color: AppTheme.textPrimary,
+            style: TextStyle(
+              color: textColor ?? AppTheme.textPrimary,
               fontSize: 16,
               fontWeight: FontWeight.w500,
             ),
