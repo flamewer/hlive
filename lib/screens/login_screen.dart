@@ -21,6 +21,21 @@ class _LoginScreenState extends State<LoginScreen> {
     _emailController.text = 'ericangelo1503@gmail.com';
   }
 
+  InputDecoration _buildInputDecoration(String hintText) {
+    return InputDecoration(
+      hintText: hintText,
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(50.0)),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(50.0),
+        borderSide: BorderSide(color: AppTheme.borderColor),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(50.0),
+        borderSide: BorderSide(color: AppTheme.primaryColor),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,7 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 24),
-            
+
             // 欢迎标题
             const Text(
               'Welcome Back',
@@ -58,7 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             const SizedBox(height: 32),
-            
+
             // 邮箱输入框
             Text(
               'Username',
@@ -71,12 +86,10 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(height: 8),
             TextFormField(
               controller: _emailController,
-              decoration: const InputDecoration(
-                hintText: 'Enter your username or email',
-              ),
+              decoration: _buildInputDecoration('Enter your username or email'),
             ),
             const SizedBox(height: 16),
-            
+
             // 密码输入框
             Text(
               'Password',
@@ -90,11 +103,12 @@ class _LoginScreenState extends State<LoginScreen> {
             TextFormField(
               controller: _passwordController,
               obscureText: !_isPasswordVisible,
-              decoration: InputDecoration(
-                hintText: 'Enter your password',
+              decoration: _buildInputDecoration('Enter your password').copyWith(
                 suffixIcon: IconButton(
                   icon: Icon(
-                    _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                    _isPasswordVisible
+                        ? Icons.visibility
+                        : Icons.visibility_off,
                     color: AppTheme.textTertiary,
                   ),
                   onPressed: () {
@@ -106,10 +120,28 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            
+
+            // 登录按钮
+            CustomButton(
+              text: 'Login',
+              onPressed: () {
+                if (_emailController.text.isNotEmpty &&
+                    _passwordController.text.isNotEmpty) {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => const MainApp()),
+                    (route) => false,
+                  );
+                }
+              },
+              isPrimary: true,
+              borderRadius: 50.0,
+            ),
+            const SizedBox(height: 16),
+
             // 忘记密码
             Align(
-              alignment: Alignment.centerRight,
+              alignment: Alignment.center,
               child: TextButton(
                 onPressed: () {
                   // 忘记密码逻辑
@@ -121,29 +153,11 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             const SizedBox(height: 24),
-            
-            // 登录按钮
-            CustomButton(
-              text: 'Login',
-              onPressed: () {
-                if (_emailController.text.isNotEmpty && _passwordController.text.isNotEmpty) {
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (context) => const MainApp()),
-                    (route) => false,
-                  );
-                }
-              },
-              isPrimary: true,
-            ),
-            const SizedBox(height: 24),
-            
+
             // 分割线
             Row(
               children: [
-                Expanded(
-                  child: Divider(color: AppTheme.borderColor),
-                ),
+                Expanded(child: Divider(color: AppTheme.borderColor)),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Text(
@@ -154,13 +168,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                 ),
-                Expanded(
-                  child: Divider(color: AppTheme.borderColor),
-                ),
+                Expanded(child: Divider(color: AppTheme.borderColor)),
               ],
             ),
             const SizedBox(height: 24),
-            
+
             // 社交登录按钮
             _buildSocialButton(
               'Sign in with Apple',
@@ -183,13 +195,17 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildSocialButton(String text, IconData icon, {VoidCallback? onPressed}) {
+  Widget _buildSocialButton(
+    String text,
+    IconData icon, {
+    VoidCallback? onPressed,
+  }) {
     return OutlinedButton(
       onPressed: onPressed,
       style: OutlinedButton.styleFrom(
         padding: const EdgeInsets.symmetric(vertical: 16),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppTheme.borderRadiusSmall),
+          borderRadius: BorderRadius.circular(50.0),
           side: const BorderSide(color: AppTheme.borderColor),
         ),
       ),
