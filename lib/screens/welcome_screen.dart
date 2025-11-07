@@ -96,108 +96,101 @@ class WelcomeScreen extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
+          padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 24),
 
               // Top collage container (staggered gallery inside a rounded card)
-              Container(
-                height: 360,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(
-                    AppTheme.borderRadiusLarge,
-                  ),
-                  border: Border.all(
-                    color: AppTheme.primaryColor.withOpacity(0.12),
-                    width: 3,
-                  ),
-                  boxShadow: [AppTheme.cardShadow],
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(
-                    AppTheme.borderRadiusLarge,
-                  ),
-                  child: Stack(
-                    children: [
-                      // Custom responsive wrap-based collage (avoids external staggered grid runtime issues)
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: LayoutBuilder(
-                          builder: (context, constraints) {
-                            const int columns = 3;
-                            const double spacing = 12.0;
-                            final double availableWidth = constraints.maxWidth;
-                            final double totalSpacing = (columns - 1) * spacing;
-                            final double tileWidth =
-                                (availableWidth - totalSpacing) / columns;
+              Stack(
+                children: [
+                  Container(
+                    height: 508,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(
+                        AppTheme.borderRadiusLarge,
+                      ),
+                      border: Border.all(
+                        color: AppTheme.primaryColor.withOpacity(0.12),
+                        width: 3,
+                      ),
+                      boxShadow: [AppTheme.cardShadow],
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(
+                        AppTheme.borderRadiusLarge,
+                      ),
+                      child: Stack(
+                        children: [
+                          // Custom responsive wrap-based collage (avoids external staggered grid runtime issues)
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: LayoutBuilder(
+                              builder: (context, constraints) {
+                                final double availableWidth =
+                                    constraints.maxWidth;
+                                final double spacing = 12.0;
+                                final double tileWidth =
+                                    (availableWidth - 2 * spacing) / 3;
 
-                            return Wrap(
-                              spacing: spacing,
-                              runSpacing: spacing,
-                              children: _galleryItems.map((item) {
-                                final double width =
-                                    tileWidth * item.crossAxisCellCount +
-                                    (item.crossAxisCellCount - 1) * spacing;
-                                // baseHeight factor controls how tall a single mainAxisCellCount unit is relative to tileWidth
-                                final double baseHeight = tileWidth * 1.05;
-                                final double height =
-                                    baseHeight * item.mainAxisCellCount +
-                                    (item.mainAxisCellCount - 1) * spacing;
-
-                                return SizedBox(
-                                  width: width,
-                                  height: height,
-                                  child: _GalleryTile(item: item),
+                                return GridView.count(
+                                  crossAxisCount: 3,
+                                  crossAxisSpacing: spacing,
+                                  mainAxisSpacing: spacing,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  children: _galleryItems.map((item) {
+                                    return _GalleryTile(item: item);
+                                  }).toList(),
                                 );
-                              }).toList(),
-                            );
-                          },
-                        ),
-                      ),
+                              },
+                            ),
+                          ),
 
-                      // overlay mask on top (overlay.png should be semi-transparent mask)
-                      Positioned.fill(
-                        child: Image.asset(
-                          'lib/asset/overlay.png',
-                          fit: BoxFit.cover,
-                        ),
+                          // overlay mask on top (overlay.png should be semi-transparent mask)
+                          Positioned.fill(
+                            child: Image.asset(
+                              'lib/asset/overlay.png',
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
-              ),
 
-              // 标题部分 - 重叠在Stack上
-              Positioned(
-                left: 0,
-                right: 0,
-                top: 480, // 调整文字位置到Stack下方
-                child: Column(
-                  children: [
-                    const Text(
-                      'New Place, New Home!',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: AppTheme.textPrimary,
-                      ),
-                      textAlign: TextAlign.center,
+                  // 标题部分 - 重叠在Stack上
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    top: -100, // 调整文字位置到Stack下方
+                    child: Column(
+                      children: [
+                        const Text(
+                          'New Place, New Home!',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: AppTheme.textPrimary,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 12),
+                        Text(
+                          'Are you ready to uproot and start over in a new area? Placoo will help you on your journey!',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: AppTheme.textSecondary,
+                            height: 1.5,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 12),
-                    Text(
-                      'Are you ready to uproot and start over in a new area? Placoo will help you on your journey!',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: AppTheme.textSecondary,
-                        height: 1.5,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
               const SizedBox(height: 20),
 
