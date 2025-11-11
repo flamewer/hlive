@@ -17,7 +17,11 @@ class ExploreScreen extends StatelessWidget {
           ),
           child: TextField(
             decoration: InputDecoration(
-              prefixIcon: const Icon(Icons.search, size: 20, color: AppTheme.textTertiary),
+              prefixIcon: const Icon(
+                Icons.search,
+                size: 20,
+                color: AppTheme.textTertiary,
+              ),
               hintText: 'Search address, city, location',
               hintStyle: const TextStyle(color: AppTheme.textTertiary),
               border: InputBorder.none,
@@ -54,7 +58,7 @@ class ExploreScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 24),
-            
+
             // 生活风格探索
             _buildSectionHeader(context, 'Explore by living style', 'See all'),
             const SizedBox(height: 16),
@@ -76,9 +80,13 @@ class ExploreScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 24),
-            
+
             // 其他体验
-            _buildSectionHeader(context, 'Want to discover other experiences', 'See all'),
+            _buildSectionHeader(
+              context,
+              'Want to discover other experiences',
+              'See all',
+            ),
             const SizedBox(height: 16),
             const Column(
               children: [
@@ -99,14 +107,15 @@ class ExploreScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSectionHeader(BuildContext context, String title, String action) {
+  Widget _buildSectionHeader(
+    BuildContext context,
+    String title,
+    String action,
+  ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          title,
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
+        Text(title, style: Theme.of(context).textTheme.titleLarge),
         TextButton(
           onPressed: () {
             // 查看全部逻辑
@@ -200,11 +209,7 @@ class LivingStyleCard extends StatelessWidget {
   final String title;
   final IconData icon;
 
-  const LivingStyleCard({
-    super.key,
-    required this.title,
-    required this.icon,
-  });
+  const LivingStyleCard({super.key, required this.title, required this.icon});
 
   @override
   Widget build(BuildContext context) {
@@ -259,22 +264,19 @@ class ExperienceCard extends StatelessWidget {
               shape: BoxShape.circle,
               color: AppTheme.primaryColor.withOpacity(0.1),
             ),
-            child: Icon(Icons.emoji_events_rounded, color: AppTheme.primaryColor),
+            child: Icon(
+              Icons.emoji_events_rounded,
+              color: AppTheme.primaryColor,
+            ),
           ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title,
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
+                Text(title, style: Theme.of(context).textTheme.titleMedium),
                 const SizedBox(height: 4),
-                Text(
-                  description,
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
+                Text(description, style: Theme.of(context).textTheme.bodySmall),
               ],
             ),
           ),

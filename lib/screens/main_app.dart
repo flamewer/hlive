@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hlive/screens/home_screen.dart';
+import 'package:hlive/screens/video_player.dart';
 import 'explore_screen.dart';
 import 'chat_screen.dart';
 import 'profile_screen.dart';
@@ -13,30 +15,16 @@ class MainApp extends StatefulWidget {
 
 class _MainAppState extends State<MainApp> {
   int _currentIndex = 1;
-  
+
   final List<Widget> _screens = [
     // Home Screen (占位符)
-    Scaffold(
-      appBar: AppBar(
-        title: const Text('Home'),
-      ),
-      body: const Center(
-        child: Text('Home Screen - Under Development'),
-      ),
-    ),
+    HomeScreen(),
     // Explore Screen
     const ExploreScreen(),
     // Chat Screen
     ChatScreen(),
     // Saved Screen (占位符)
-    Scaffold(
-      appBar: AppBar(
-        title: const Text('Saved'),
-      ),
-      body: const Center(
-        child: Text('Saved Screen - Under Development'),
-      ),
-    ),
+    VideoPlayerScreen(),
     // Profile Screen
     ProfileScreen(),
   ];
