@@ -20,7 +20,7 @@ class _MainAppState extends State<MainApp> {
     // Home Screen (占位符)
     HomeScreen(),
     // Explore Screen
-    const ExploreScreen(),
+    ExploreScreen(),
     // Chat Screen
     ChatScreen(),
     // Saved Screen (占位符)

@@ -1,8 +1,77 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:hlive/models/api_response.dart';
+import 'package:hlive/models/component/banner_component.dart';
+import 'package:hlive/models/component/base_component.dart';
+import 'package:hlive/models/component/component_factory.dart';
+import 'package:hlive/models/component/title_component.dart';
+import 'package:hlive/widgets/card_skeleton.dart';
 import '../theme/app_theme.dart';
 
-class ExploreScreen extends StatelessWidget {
+Future<List<BaseComponent>> fetchComponents() async {
+  final dio = Dio();
+
+  try {
+    Map<String, dynamic> queryParameters = {
+      'pageId': '1988812370386714625',
+      'pageVersion': 5,
+      'application': 'phomemo',
+      'lang': 'en-us',
+      'model': 'M08F-WS',
+      'userId': 'tddsa',
+      'version': '1.0.0',
+      'page': 1,
+      'page_size': 10,
+    };
+    dio.options.queryParameters = queryParameters;
+    final response = await dio.get('http://192.168.137.1:5002/api/page/fetch');
+
+    if (response.statusCode == 200) {
+      final apiResponse = ApiResponse<List<BaseComponent>>.fromJson(
+        response.data,
+        (data) {
+          if (data is List) {
+            return data
+                .map((item) {
+                  if (item is Map<String, dynamic>) {
+                    return ComponentFactory.createComponent(item);
+                  }
+                  return item;
+                })
+                .toList()
+                .cast<BaseComponent>();
+          }
+          return <BaseComponent>[];
+        },
+      );
+      if (apiResponse.isSuccess) {
+        return apiResponse.data!;
+      } else {
+        throw Exception('API Error: ${apiResponse.msg}');
+      }
+    } else {
+      throw Exception('Failed to load album');
+    }
+  } on DioException catch (e) {
+    throw Exception('Network Error: ${e.message}');
+  }
+}
+
+class ExploreScreen extends StatefulWidget {
   const ExploreScreen({super.key});
+
+  @override
+  State<ExploreScreen> createState() => _ExploreScreenState();
+}
+
+class _ExploreScreenState extends State<ExploreScreen> {
+  late Future<List<BaseComponent>> futureComponents;
+
+  @override
+  void initState() {
+    super.initState();
+    futureComponents = fetchComponents();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,81 +99,76 @@ class ExploreScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // 下一个旅行目的地
-            _buildSectionHeader(context, 'Find your next trip', 'See all'),
-            const SizedBox(height: 16),
-            const Row(
+      body: FutureBuilder<List<BaseComponent>>(
+        future: futureComponents,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return ListView(
+              padding: const EdgeInsets.all(16),
               children: [
-                Expanded(
-                  child: DestinationCard(
-                    destination: 'Bali, Indonesia',
-                    properties: '345 rented props',
-                    imageColor: Color(0xFFFFE8E9),
-                  ),
-                ),
-                SizedBox(width: 12),
-                Expanded(
-                  child: DestinationCard(
-                    destination: 'Yogyakarta, Indonesia',
-                    properties: '290 rented props',
-                    imageColor: Color(0xFFE8F4FF),
-                  ),
+                _buildSectionHeader(context, 'Explore', ''),
+                const SizedBox(height: 16),
+                CardSkeleton(),
+              ],
+            );
+          }
+          if (snapshot.hasError) {
+            return ListView(
+              padding: const EdgeInsets.all(16),
+              children: [
+                _buildSectionHeader(context, 'Explore', ''),
+                const SizedBox(height: 16),
+                ErrorDisplay(
+                  message: snapshot.error.toString(),
+                  onRetry: () {
+                    setState(() {
+                      futureComponents = fetchComponents();
+                    });
+                  },
                 ),
               ],
-            ),
-            const SizedBox(height: 24),
-
-            // 生活风格探索
-            _buildSectionHeader(context, 'Explore by living style', 'See all'),
-            const SizedBox(height: 16),
-            const Row(
-              children: [
-                Expanded(
-                  child: LivingStyleCard(
-                    title: 'Outdoor living',
-                    icon: Icons.forest_rounded,
-                  ),
-                ),
-                SizedBox(width: 12),
-                Expanded(
-                  child: LivingStyleCard(
-                    title: 'Japanese housing',
-                    icon: Icons.temple_buddhist_rounded,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
-
-            // 其他体验
-            _buildSectionHeader(
-              context,
-              'Want to discover other experiences',
-              'See all',
-            ),
-            const SizedBox(height: 16),
-            const Column(
-              children: [
-                ExperienceCard(
-                  title: 'Learn the culture',
-                  description: 'Learn about local culture and customs',
-                ),
-                SizedBox(height: 12),
-                ExperienceCard(
-                  title: 'Online events',
-                  description: 'Join virtual events and meetups',
-                ),
-              ],
-            ),
-          ],
-        ),
+            );
+          }
+          final components = snapshot.data!;
+          return ListView(
+            padding: const EdgeInsets.all(16),
+            children: [
+              _buildSectionHeader(context, 'Components', ''),
+              const SizedBox(height: 16),
+              ...components
+                  .map((component) => _buildComponentWidget(component))
+                  .toList(),
+            ],
+          );
+        },
       ),
     );
+  }
+
+  Widget _buildComponentWidget(BaseComponent component) {
+    // 根据不同组件类型构建不同的 UI
+    if (component is BannerComponent) {
+      // 处理 Banner 组件
+      return DestinationCard(
+        destination: component.componentName,
+        properties: component.componentType,
+        imageColor: AppTheme.primaryColor,
+      );
+    } else if (component is TitleComponent) {
+      // 处理标题组件
+      return DestinationCard(
+        destination: component.componentName,
+        properties: component.componentType,
+        imageColor: AppTheme.secondaryColor,
+      );
+    } else {
+      // 默认处理
+      return DestinationCard(
+        destination: component.componentName,
+        properties: component.componentType,
+        imageColor: AppTheme.textTertiary,
+      );
+    }
   }
 
   Widget _buildSectionHeader(
