@@ -5,7 +5,11 @@ import 'package:hlive/models/component/banner_component.dart';
 import 'package:hlive/models/component/base_component.dart';
 import 'package:hlive/models/component/component_factory.dart';
 import 'package:hlive/models/component/title_component.dart';
+import 'package:hlive/models/component/title_image_component.dart';
 import 'package:hlive/widgets/card_skeleton.dart';
+import 'package:hlive/widgets/lottie_banner.dart';
+import 'package:hlive/widgets/title_compoment_catd.dart';
+import 'package:hlive/widgets/title_image_component_cart.dart';
 import '../theme/app_theme.dart';
 
 Future<List<BaseComponent>> fetchComponents() async {
@@ -13,8 +17,8 @@ Future<List<BaseComponent>> fetchComponents() async {
 
   try {
     Map<String, dynamic> queryParameters = {
-      'pageId': '1988812370386714625',
-      'pageVersion': 5,
+      'pageId': '1993230384721010689',
+      'pageVersion': 1,
       'application': 'phomemo',
       'lang': 'en-us',
       'model': 'M08F-WS',
@@ -24,7 +28,15 @@ Future<List<BaseComponent>> fetchComponents() async {
       'page_size': 10,
     };
     dio.options.queryParameters = queryParameters;
-    final response = await dio.get('http://192.168.137.1:5002/api/page/fetch');
+    dio.options.headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization':
+          'Bearer DbeChKEZidTZjQpFRlhLjdugam__FVnfooYeCjVinHD08JvEO8bzLLhiFrIzTGugFsf_xW6A-IE822badfgkRZiKlERVPhuwKJUSzPyM23bkTt_jL1oo9l4tSCbjVFv8',
+    };
+    final response = await dio.get(
+      'https://api-quindata.qu-in.top/component/api/page/fetch',
+    );
 
     if (response.statusCode == 200) {
       final apiResponse = ApiResponse<List<BaseComponent>>.fromJson(
@@ -130,12 +142,26 @@ class _ExploreScreenState extends State<ExploreScreen> {
             );
           }
           final components = snapshot.data!;
+          final bannerComponents = components
+              .where((component) => component is BannerComponent)
+              .toList();
+          final otherComponents = components
+              .where((component) => component is! BannerComponent)
+              .toList();
+
           return ListView(
             padding: const EdgeInsets.all(16),
             children: [
+              // Banner组件置顶显示
+              if (bannerComponents.isNotEmpty) ...[
+                ...bannerComponents
+                    .map((component) => _buildComponentWidget(component))
+                    .toList(),
+                const SizedBox(height: 16),
+              ],
               _buildSectionHeader(context, 'Components', ''),
               const SizedBox(height: 16),
-              ...components
+              ...otherComponents
                   .map((component) => _buildComponentWidget(component))
                   .toList(),
             ],
@@ -148,18 +174,16 @@ class _ExploreScreenState extends State<ExploreScreen> {
   Widget _buildComponentWidget(BaseComponent component) {
     // 根据不同组件类型构建不同的 UI
     if (component is BannerComponent) {
-      // 处理 Banner 组件
-      return DestinationCard(
-        destination: component.componentName,
-        properties: component.componentType,
-        imageColor: AppTheme.primaryColor,
-      );
+      // 处理 Banner 组件 - 使用Lottie实现
+      return LottieBannerComponent(bannerComponent: component);
     } else if (component is TitleComponent) {
       // 处理标题组件
-      return DestinationCard(
-        destination: component.componentName,
-        properties: component.componentType,
-        imageColor: AppTheme.secondaryColor,
+      return TitleComponentCard(titleComponent: component);
+    } else if (component is TitleImageComponent) {
+      // 处理图文组件
+      return TitleImageHorizontalComponent(
+        titleImageComponent: component,
+        height: 200.0, // 可根据需要调整高度
       );
     } else {
       // 默认处理

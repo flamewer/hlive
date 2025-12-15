@@ -16,10 +16,6 @@ class BaseComponent {
   final dynamic height;
   final bool? intersect;
   final bool? pagerHide;
-  final bool? detailEntranceHide;
-  final String? detailEntranceJumpUrl;
-  final String? detailEntranceJumpUrlType;
-  final int? stopTime;
 
   BaseComponent({
     required this.id,
@@ -36,10 +32,6 @@ class BaseComponent {
     this.height,
     this.intersect,
     this.pagerHide,
-    this.detailEntranceHide,
-    this.detailEntranceJumpUrl,
-    this.detailEntranceJumpUrlType,
-    this.stopTime,
   });
 
   factory BaseComponent.fromJson(Map<String, dynamic> json) {
@@ -60,10 +52,6 @@ class BaseComponent {
       height: json['height'],
       intersect: json['intersect'] as bool?,
       pagerHide: json['pagerHide'] as bool?,
-      detailEntranceHide: json['detailEntranceHide'] as bool?,
-      detailEntranceJumpUrl: json['detailEntranceJumpUrl'] as String?,
-      detailEntranceJumpUrlType: json['detailEntranceJumpUrlType'] as String?,
-      stopTime: json['stopTime'] as int?,
     );
   }
 }

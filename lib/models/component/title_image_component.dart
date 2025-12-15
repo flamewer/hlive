@@ -1,8 +1,14 @@
 // lib/models/component/banner_component.dart
 import 'package:hlive/models/component/base_component.dart';
+import 'package:hlive/models/slot/base_slot.dart';
 
 // lib/models/component/title_image_component.dart
 class TitleImageComponent extends BaseComponent {
+  final int? height;
+  final bool? intersect;
+  final String? detailEntranceJumpUrl;
+  final bool? detailEntranceHide;
+  final String? detailEntranceJumpUrlType;
   TitleImageComponent({
     required super.id,
     required super.pageId,
@@ -15,33 +21,34 @@ class TitleImageComponent extends BaseComponent {
     super.componentVersion,
     required super.componentNameColor,
     required super.slotList,
-    super.height,
-    super.intersect,
+    this.height,
+    this.intersect,
     super.pagerHide,
-    super.detailEntranceHide,
-    super.detailEntranceJumpUrl,
-    super.detailEntranceJumpUrlType,
+    this.detailEntranceHide,
+    this.detailEntranceJumpUrl,
+    this.detailEntranceJumpUrlType,
   }) : super();
 
-  factory TitleImageComponent.fromBaseComponent(BaseComponent base) {
+  factory TitleImageComponent.fromJson(Map<String, dynamic> json) {
     return TitleImageComponent(
-      id: base.id,
-      pageId: base.pageId,
-      myComponentId: base.myComponentId,
-      componentName: base.componentName,
-      componentNameHide: base.componentNameHide,
-      componentStyle: base.componentStyle,
-      componentSort: base.componentSort,
-      componentType: base.componentType,
-      componentVersion: base.componentVersion,
-      componentNameColor: base.componentNameColor,
-      slotList: base.slotList,
-      height: base.height,
-      intersect: base.intersect,
-      pagerHide: base.pagerHide,
-      detailEntranceHide: base.detailEntranceHide,
-      detailEntranceJumpUrl: base.detailEntranceJumpUrl,
-      detailEntranceJumpUrlType: base.detailEntranceJumpUrlType,
+      id: json['id'] as String,
+      pageId: json['pageId'] as String,
+      myComponentId: json['myComponentId'] as String?,
+      componentName: json['componentName'] as String,
+      componentNameHide: json['componentNameHide'] as bool,
+      componentStyle: json['componentStyle'] as String?,
+      componentSort: json['componentSort'] as int,
+      componentType: json['componentType'] as String,
+      componentVersion: json['componentVersion'] as String?,
+      componentNameColor: json['componentNameColor'] as String,
+      slotList: (json['slotList'] as List)
+          .map((item) => Slot.fromJson(item as Map<String, dynamic>))
+          .toList(),
+      height: json['height'],
+      intersect: json['intersect'] as bool?,
+      detailEntranceJumpUrl: json['detailEntranceJumpUrl'] as String?,
+      detailEntranceHide: json['detailEntranceHide'] as bool?,
+      detailEntranceJumpUrlType: json['detailEntranceJumpUrlType'] as String?,
     );
   }
 }

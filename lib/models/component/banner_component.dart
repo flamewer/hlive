@@ -1,10 +1,8 @@
 // lib/models/component/banner_component.dart
 import 'package:hlive/models/component/base_component.dart';
+import 'package:hlive/models/slot/base_slot.dart';
 
 class BannerComponent extends BaseComponent {
-  final int? stopTime;
-  final int? height;
-
   BannerComponent({
     required super.id,
     required super.pageId,
@@ -17,25 +15,25 @@ class BannerComponent extends BaseComponent {
     super.componentVersion,
     required super.componentNameColor,
     required super.slotList,
-    this.stopTime,
-    this.height,
+    super.height,
   }) : super();
 
-  factory BannerComponent.fromBaseComponent(BaseComponent base) {
+  factory BannerComponent.fromJson(Map<String, dynamic> json) {
     return BannerComponent(
-      id: base.id,
-      pageId: base.pageId,
-      myComponentId: base.myComponentId,
-      componentName: base.componentName,
-      componentNameHide: base.componentNameHide,
-      componentStyle: base.componentStyle,
-      componentSort: base.componentSort,
-      componentType: base.componentType,
-      componentVersion: base.componentVersion,
-      componentNameColor: base.componentNameColor,
-      slotList: base.slotList,
-      stopTime: base.stopTime,
-      height: base.height as int?,
+      id: json['id'] as String,
+      pageId: json['pageId'] as String,
+      myComponentId: json['myComponentId'] as String?,
+      componentName: json['componentName'] as String,
+      componentNameHide: json['componentNameHide'] as bool,
+      componentStyle: json['componentStyle'] as String?,
+      componentSort: json['componentSort'] as int,
+      componentType: json['componentType'] as String,
+      componentVersion: json['componentVersion'] as String?,
+      componentNameColor: json['componentNameColor'] as String,
+      slotList: (json['slotList'] as List)
+          .map((item) => Slot.fromJson(item as Map<String, dynamic>))
+          .toList(),
+      height: json['height'],
     );
   }
 }

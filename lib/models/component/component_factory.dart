@@ -12,13 +12,18 @@ class ComponentFactory {
 
     switch (componentType) {
       case "0": // Banner组件
-        return BannerComponent.fromBaseComponent(baseComponent);
+        return BannerComponent.fromJson(json);
       case "1": // 标题组件
-        return TitleComponent.fromBaseComponent(baseComponent);
+        return TitleComponent.fromJson(json);
       case "2": // 订阅组件
-        return SubscriptionComponent.fromBaseComponent(baseComponent);
-      case "3": // 标题图片组件
-        return TitleImageComponent.fromBaseComponent(baseComponent);
+        return SubscriptionComponent.fromJson(json);
+      case "3":
+      case "4":
+      case "5":
+      case "6":
+      case "8":
+      case "12": // 标题图片组件
+        return TitleImageComponent.fromJson(json);
       default:
         return baseComponent;
     }
